@@ -2,6 +2,7 @@ import express from "express";
 import authentication from "./routes/auth-route.js"
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import todo from "./routes/todo-route.js";
 
 dotenv.config();
 
@@ -18,5 +19,6 @@ const app=express();
 app.use(express.json());
 
 app.use("/",authentication);
+app.use("/todo",todo);
 
 app.listen(3000,()=>console.log('Server started'));

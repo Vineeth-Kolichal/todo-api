@@ -17,7 +17,7 @@ export const signup = async (req, res) => {
             res.status(201).json({ message: "Account created successfully", data: { name: user.name, email: user.email, createdAt: user.createdAt } });
         })
     } catch (error) {
-        res.status(500).json({ message: "error while signup", error: error });
+        res.status(500).json({ message: "Error while signup", error: error });
     }
 }
 
@@ -27,7 +27,7 @@ export const signin = async (req, res) => {
         if (user) {
             bcrypt.compare(req.body.password, user.password).then((status) => {
                 if (status) {
-                    jsonwebtoken.sign({ id:user._id }, process.env.SECRET_KEY, (err, token) => {
+                    jsonwebtoken.sign({ id: user._id }, process.env.SECRET_KEY, (err, token) => {
                         if (token) {
                             res.status(200).json({ message: "Successfully logged in", token: token });
                         } else {

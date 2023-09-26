@@ -1,11 +1,19 @@
 import jwt from "jsonwebtoken";
+import { blackListToken } from "../controllers/auth-controller.js";
 
 export const verifyToken = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        req.userId = decoded.id;
-        next();
+        if (!blackListToken.has(token)) {
+            req.userId = decoded.id;
+            next();
+            
+        } else {
+            res.status(401).json({ message: "You are not autherized" });
+           
+        }
+
     } catch (error) {
         res.status(401).json({ message: "You are not autherized", error: error });
     }

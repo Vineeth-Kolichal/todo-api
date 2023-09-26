@@ -42,4 +42,17 @@ export const updateStatus = async (req, res) => {
 
 export const deleteTodo = async (req, res) => {
 
+    try {
+        db.collection('todos').deleteOne({_id:req.params.id}).then((error,status)=>{
+            if(status){
+                res.status(200).json({message:"Todo deleted"});
+            }
+            if(error){
+                res.status(400).json({message:"Error while deleting todo",error:error});
+            }
+        })
+        
+    } catch (error) {
+        res.status(500).json({message:"Error while adding todo",error:error});
+    }
 }

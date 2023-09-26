@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import userSchema from "../models/user-model.js";
 import jsonwebtoken from "jsonwebtoken";
 
+
 const db = mongoose.connection;
 export const signup = async (req, res) => {
     try {
@@ -20,14 +21,14 @@ export const signup = async (req, res) => {
         res.status(500).json({ message: "Error while signup", error: error });
     }
 }
-
+//
 export const signin = async (req, res) => {
     try {
         const user = await db.collection('users').findOne({ email: req.body.email });
         if (user) {
             bcrypt.compare(req.body.password, user.password).then((status) => {
                 if (status) {
-                    jsonwebtoken.sign({ id: user._id }, process.env.SECRET_KEY, (err, token) => {
+                    jsonwebtoken.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 24 * 30 }, (err, token) => {
                         if (token) {
                             res.status(200).json({ message: "Successfully logged in", token: token });
                         } else {
@@ -41,6 +42,19 @@ export const signin = async (req, res) => {
         } else {
             res.status(404).json({ message: "user not found" });
         }
+    } catch (error) {
+        res.status(500).json({ message: "Something error", error: error });
+    }
+}
+export const blackListToken = new Set();
+export const logout = (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        blackListToken.add(token);
+        jsonwebtoken.verify(token, process.env.SECRET_KEY, {
+            ignoreExpiration: true,
+        });
+        res.status(200).json({ message: "Successfully logged out" });
     } catch (error) {
         res.status(500).json({ message: "Something error", error: error });
     }

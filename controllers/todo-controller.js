@@ -37,12 +37,25 @@ export const addTodo = async (req, res) => {
 }
 
 export const updateStatus = async (req, res) => {
+    try {
+        const id=req.params.id;
+        const filter={_id:id};
+        const update={$set:{isCompleted:req.body.isCompleted}}
+        const result= await TodoSchema.updateOne(filter,update)
+        if(result){
+            res.status(201).json({message:"Todo status updated",updated:result});
+        }
+        
+    } catch (error) {
+        res.status(500).json({ message: "Error while updating todo", error: error });
+    }
 
 }
 
 export const deleteTodo = async (req, res) => {
     try {
         const id = req.params.id;
+      
         await TodoSchema.deleteOne({ _id: id });
         res.status(200).json({ message: "Todo deleted" });
     } catch (error) {

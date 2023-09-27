@@ -7,7 +7,7 @@ export const getAllTodos = async (req, res) => {
 
     try {
         const todolist = await db.collection('todos').find({ userId: req.userId }).toArray();
-        res.status(200).json({ message: "Success", count: todolist.length, todos: todolist });
+        res.status(200).json({ message: "Success",user:req.name, count: todolist.length, todos: todolist });
 
     } catch (error) {
         res.status(500).json({ message: "Error while geting todos", error: error });

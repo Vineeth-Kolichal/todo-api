@@ -19,6 +19,7 @@ const app=express();
 app.use(express.json());
 
 app.use("/",authentication);
+
 app.use("/todo",todo);
 
 app.listen(3000,()=>console.log('Server started'));

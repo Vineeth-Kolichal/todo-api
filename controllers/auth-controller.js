@@ -28,7 +28,7 @@ export const signin = async (req, res) => {
         if (user) {
             bcrypt.compare(req.body.password, user.password).then((status) => {
                 if (status) {
-                    jsonwebtoken.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 24 * 30 }, (err, token) => {
+                    jsonwebtoken.sign({ id: user._id,name:user.name }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 24 * 30 }, (err, token) => {
                         if (token) {
                             res.status(200).json({ message: "Successfully logged in", token: token });
                         } else {

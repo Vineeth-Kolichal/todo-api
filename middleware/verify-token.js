@@ -7,6 +7,7 @@ export const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         if (!blackListToken.has(token)) {
             req.userId = decoded.id;
+            req.name=decoded.name;
             next();
             
         } else {
